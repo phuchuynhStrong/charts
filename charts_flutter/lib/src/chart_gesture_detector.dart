@@ -24,6 +24,7 @@ import 'package:flutter/material.dart'
         ScaleUpdateDetails,
         TapDownDetails,
         TapUpDetails;
+import 'package:flutter/material.dart';
 
 import 'behaviors/chart_behavior.dart' show GestureType;
 import 'chart_container.dart' show ChartContainer, ChartContainerRenderObject;
@@ -65,6 +66,12 @@ class ChartGestureDetector {
       onScaleStart: wantDrag ? onScaleStart : null,
       onScaleUpdate: wantDrag ? onScaleUpdate : null,
       onScaleEnd: wantDrag ? onScaleEnd : null,
+      onHorizontalDragDown: (_) {
+        print("Hello motherfucker");
+      },
+      onHorizontalDragStart: wantDrag ? this.onDragStart : null,
+      onHorizontalDragUpdate: wantDrag ? this.onDragUpdate : null,
+      onHorizontalDragEnd: wantDrag ? this.onDragEnd : null,
     );
   }
 
@@ -121,6 +128,36 @@ class ChartGestureDetector {
   }
 
   void onScaleEnd(ScaleEndDetails d) {
+    if (!_isDragging) {
+      return;
+    }
+
+    final container = _containerResolver();
+
+    container.gestureProxy
+        .onDragEnd(_lastTapPoint, _lastScale, d.velocity.pixelsPerSecond.dx);
+  }
+  void onDragStart(DragStartDetails d) {
+    _longPressTimer?.cancel();
+
+    final container = _containerResolver();
+    _lastTapPoint = new Point(d.localPosition.dx, d.localPosition.dy);
+
+    _isDragging = container.gestureProxy.onDragStart(_lastTapPoint);
+  }
+
+  void onDragUpdate(DragUpdateDetails d) {
+    if (!_isDragging) {
+      return;
+    }
+
+    final container = _containerResolver();
+    _lastTapPoint = new Point(d.localPosition.dx, d.localPosition.dy);
+
+    container.gestureProxy.onDragUpdate(_lastTapPoint, 1.0);
+  }
+
+  void onDragEnd(DragEndDetails d) {
     if (!_isDragging) {
       return;
     }
