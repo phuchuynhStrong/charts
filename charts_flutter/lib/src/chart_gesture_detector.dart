@@ -66,9 +66,7 @@ class ChartGestureDetector {
       onScaleStart: wantDrag ? onScaleStart : null,
       onScaleUpdate: wantDrag ? onScaleUpdate : null,
       onScaleEnd: wantDrag ? onScaleEnd : null,
-      onHorizontalDragDown: (_) {
-        print("Hello motherfucker");
-      },
+      onHorizontalDragDown: (_) {},
       onHorizontalDragStart: wantDrag ? this.onDragStart : null,
       onHorizontalDragUpdate: wantDrag ? this.onDragUpdate : null,
       onHorizontalDragEnd: wantDrag ? this.onDragEnd : null,
@@ -137,6 +135,7 @@ class ChartGestureDetector {
     container.gestureProxy
         .onDragEnd(_lastTapPoint, _lastScale, d.velocity.pixelsPerSecond.dx);
   }
+
   void onDragStart(DragStartDetails d) {
     _longPressTimer?.cancel();
 
